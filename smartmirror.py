@@ -2,7 +2,12 @@
 # requirements
 # requests, feedparser, traceback, Pillow
 
-from Tkinter import *
+try:
+    # for Python2
+    from Tkinter import *   ## notice capitalized T in Tkinter 
+except ImportError:
+    # for Python3
+    from tkinter import * 
 import locale
 import threading
 import time
@@ -19,12 +24,16 @@ LOCALE_LOCK = threading.Lock()
 ui_locale = '' # e.g. 'fr_FR' fro French, '' as default
 time_format = 12 # 12 or 24
 date_format = "%b %d, %Y" # check python doc for strftime() for options
-news_country_code = 'us'
-weather_api_token = '<TOKEN>' # create account at https://darksky.net/dev/
-weather_lang = 'en' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
-weather_unit = 'us' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values
-latitude = None # Set this if IP location lookup does not work for you (must be a string)
-longitude = None # Set this if IP location lookup does not work for you (must be a string)
+news_country_code = 'fr'
+weather_api_token = 'your token in token_darksky.txt' # create account at https://darksky.net/dev/
+with open("token_darksky.txt") as file:  
+    weather_api_token = file.read() 
+weather_lang = 'fr' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
+weather_unit = 'si' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values ('us', or 'si', or 'auto', or ...)
+# latitude = None # Set this if IP location lookup does not work for you (must be a string)
+latitude = 59.9139 # Set this if IP location lookup does not work for you (must be a string)
+# longitude = None # Set this if IP location lookup does not work for you (must be a string)
+longitude = 10.7522 # Set this if IP location lookup does not work for you (must be a string)
 xlarge_text_size = 94
 large_text_size = 48
 medium_text_size = 28
@@ -99,6 +108,9 @@ class Clock(Frame):
             # could use >200 ms, but display gets jerky
             self.timeLbl.after(200, self.tick)
 
+def fahrenheit_to_celsius(fahrenheit):
+    celsius = (fahrenheit - 32) / 1.8
+    return celsius
 
 class Weather(Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -199,7 +211,7 @@ class Weather(Frame):
                     self.locationLbl.config(text=location2)
         except Exception as e:
             traceback.print_exc()
-            print "Error: %s. Cannot get weather." % e
+            print("Error: %s. Cannot get weather." % e)
 
         self.after(600000, self.get_weather)
 
@@ -228,7 +240,7 @@ class News(Frame):
                 headlines_url = "https://news.google.com/news?ned=us&output=rss"
             else:
                 headlines_url = "https://news.google.com/news?ned=%s&output=rss" % news_country_code
-
+            print(headlines_url)
             feed = feedparser.parse(headlines_url)
 
             for post in feed.entries[0:5]:
@@ -236,7 +248,7 @@ class News(Frame):
                 headline.pack(side=TOP, anchor=W)
         except Exception as e:
             traceback.print_exc()
-            print "Error: %s. Cannot get news." % e
+            print("Error: %s. Cannot get news." % e)
 
         self.after(600000, self.get_headlines)
 

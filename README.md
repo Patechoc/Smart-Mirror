@@ -29,14 +29,15 @@ sudo apt-get install python-imaging-tk
 ```
 
 ### Add your api token
-Make sure vim is installed on your system: `sudo apt-get install vim`
-Use `vim` to edit you file
+Make sure an editor is installed on your system, e.g. `vim` or `nano`: `sudo apt-get install vim`
+Use it to edit you file
 
 ```
 vim smartmirror.py
 ```
 
-replace `weather_api_token` with the token you got from forecast.io
+Register and get your token from forecast.io for accessing weather data,
+then copy it in a file named `token_darksky.txt`. 
 
 ## Running
 To run the application run the following command in this folder
